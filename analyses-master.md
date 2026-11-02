@@ -23,7 +23,17 @@ Problems are sorted into 5 boxes based on self-assessed performance:
 
 ---
 
-## 0560.subarray-sum-equals-k | Box 1 | Last attempt: 2026-11-02
+## 0003.longest-substring-without-repeating-characters | Box 1 | Last attempt: 2026-11-02
+
+You solved this correctly using the sliding window + hashmap approach, achieving good runtime and memory stats. You demonstrated solid problem decomposition—quickly recognizing the monotonic sliding window pattern, leveraging a hashmap for O(1) lookups of last-seen indices, and iterating through multiple failing test cases (MQ, pwwkew, ccbbcc) with debug prints to isolate the logic error where you needed to check `map[s[j]] > i` rather than just `s[j] in map` (which fails when a character was seen *before* the current window). Your debugging process was methodical and eventually led you to the correct fix.
+
+**What went well:** You correctly identified the algorithm upfront, handled edge cases around window boundaries (initializing `i = -1`, removing the `+1` after `i = map[s[j]]`), and caught a subtle bug where stale map entries from *before* the current window were incorrectly triggering a window move. Your willingness to trace execution manually when prints were insufficient showed good debugging instincts. You also avoided using `defaultdict`'s default 0-value as a false positive, though you initially worried about it.
+
+**Areas to improve:** You spent considerable time on off-by-one errors that stem from C++ habits (`j++`, `i = map[sj] + 1` initially) not translating cleanly to Python's exclusive range semantics—practice Python's `range()` and slicing conventions to reduce this friction. Your solution is optimal at O(n) time / O(min(n, alphabet)) space, so no algorithmic changes needed. The `j += 1` at the end of a `for j in range()` loop is a no-op—removing dead code like this will save confusion later. Also, avoid naming a variable `map` as it shadows Python's built-in.
+
+---
+
+## 0560.subarray-sum-equals-k | Box 1 | Last attempt: 2026-11-01
 
 **Overview:** After 7 failed attempts (mostly in C++), you finally solved this in Python using the correct prefix sum + hash map approach. You referenced your previous AI analysis to correct known pitfalls (map storing frequencies not indices/answers, initializing `psfm[0] = 1`), which helped you pass efficiently — though you still relied heavily on web lookups for Python syntax rather than solving purely from understanding.
 
