@@ -1,0 +1,8 @@
+problems:
+  '560':
+    box_num: 1
+    streak_perfect: 0
+    last_review: '2026-11-01'
+    attempts:
+    - date: '2026-11-01'
+      rating: 1

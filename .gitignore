@@ -1,0 +1,6 @@
+# Do not include my voice recordings or transcripts
+**/attempt-**.md
+**/attempt-**.mp3
+
+# Do not include Python env files
+**/.venv/

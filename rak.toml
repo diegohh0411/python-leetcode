@@ -1,0 +1,58 @@
+leetcode_dir = "./python"
+[test.cpp]
+flags = ["-std=c++20", "-O2"]
+debug_flags = ["-std=c++20", "-O1", "-g", "-fno-omit-frame-pointer", "-fsanitize=address,undefined", "-fno-sanitize-recover=undefined"]
+
+[transcribe]
+default_provider = "openrouter"
+
+[transcribe.providers.elevenlabs]
+# api_key: run `rak login elevenlabs` to set
+
+[transcribe.providers.openrouter]
+model = "microsoft/mai-transcribe-2"
+# api_key: run `rak login openrouter` to set
+
+[transcribe.providers.chirp]
+# run `rak login chirp` to configure
+
+[analyze]
+default_provider = "openrouter"
+system_prompt = """
+Analyze this Leetcode problem solution based on my voice notes. Keep it brief - 2-3 paragraphs max.
+
+PROBLEM:
+{question}
+
+MY SOLUTION (latest attempt):
+{solution}
+
+MY VOICE NOTES:
+{transcripts}
+
+Provide:
+1. Brief overview of how the problem went
+2. What I did well
+3. What I struggled with / areas to improve
+4. Improvement guide: if the solution was unsolved, suboptimal, or inefficient, provide a concrete guide on how to solve or optimize it. Include the key algorithm/data structure to use, time/space complexity, and a brief pseudocode outline of the improved approach. If the solution is already optimal, skip this section.
+
+Focus on identifying strengths, weaknesses, and actionable feedback for future practice.
+"""
+
+[analyze.providers.claude]
+model = "sonnet"
+
+[analyze.providers.gemini]
+model = "gemini-2.5-flash"
+
+[analyze.providers.grok]
+model = "grok-4.6"
+
+[analyze.providers.openrouter]
+model = "xiaomi/mimo-v2.6-flash"
+
+[analyze.providers.codex]
+model = "gpt-6-astra"
+
+[leetcode]
+# session = ""   # or set LEETCODE_SESSION env var
