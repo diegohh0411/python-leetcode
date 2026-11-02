@@ -23,13 +23,15 @@ Problems are sorted into 5 boxes based on self-assessed performance:
 
 ---
 
-## 0003.longest-substring-without-repeating-characters | Box 1 | Last attempt: 2026-11-02
+## 0049.group-anagrams | Box 1 | Last attempt: 2026-11-02
 
-You solved this correctly using the sliding window + hashmap approach, achieving good runtime and memory stats. You demonstrated solid problem decomposition—quickly recognizing the monotonic sliding window pattern, leveraging a hashmap for O(1) lookups of last-seen indices, and iterating through multiple failing test cases (MQ, pwwkew, ccbbcc) with debug prints to isolate the logic error where you needed to check `map[s[j]] > i` rather than just `s[j] in map` (which fails when a character was seen *before* the current window). Your debugging process was methodical and eventually led you to the correct fix.
+## Analysis of Your Group Anagrams Attempt
 
-**What went well:** You correctly identified the algorithm upfront, handled edge cases around window boundaries (initializing `i = -1`, removing the `+1` after `i = map[s[j]]`), and caught a subtle bug where stale map entries from *before* the current window were incorrectly triggering a window move. Your willingness to trace execution manually when prints were insufficient showed good debugging instincts. You also avoided using `defaultdict`'s default 0-value as a false positive, though you initially worried about it.
+**Overview:** You had a solid first-attempt Python solution for Group Anagrams. You correctly identified the core strategy — using sorted strings as dictionary keys to group anagrams — and passed all 130 test cases with strong performance (11ms, better than 85%). You noted this was a repeat problem you'd done before in C++, which gave you confidence in the approach.
 
-**Areas to improve:** You spent considerable time on off-by-one errors that stem from C++ habits (`j++`, `i = map[sj] + 1` initially) not translating cleanly to Python's exclusive range semantics—practice Python's `range()` and slicing conventions to reduce this friction. Your solution is optimal at O(n) time / O(min(n, alphabet)) space, so no algorithmic changes needed. The `j += 1` at the end of a `for j in range()` loop is a no-op—removing dead code like this will save confusion later. Also, avoid naming a variable `map` as it shadows Python's built-in.
+**What You Did Well:** Your intuition for the problem was immediate and correct. Using `defaultdict(list)` with sorted-string keys is the clean, idiomatic Python approach for this problem. You also self-corrected efficiently — catching the indentation error and the missing step of converting `groupings` into the `answer` list. Your performance metrics were excellent.
+
+**Struggles / Areas to Improve:** Your voice notes reveal some unfamiliarity with Python fundamentals: `defaultdict` syntax, how `sorted()` works on strings, string immutability vs. list `append`, and how to iterate over a dictionary's items. You had to Google several of these mid-problem. You also declared `key` outside the loop unnecessarily, and the explicit `if/else` membership check is redundant when using `defaultdict` — `groupings[key].append(item)` handles both cases automatically. Practicing Python's standard library and common idioms (dict iteration, defaultdict shortcuts) will speed up your workflow considerably.
 
 ---
 
@@ -42,3 +44,13 @@ You solved this correctly using the sliding window + hashmap approach, achieving
 **Areas to improve:** Two things stand out. First, you still don't own the *why* — in your notes you repeatedly deferred to your old analysis instead of explaining why `prefix_sum - k` is the right lookup yourself. That reasoning should be internalized: if a subarray from index `i+1` to current ends with sum `k`, then `prefix_sum_current - prefix_sum_i = k`, so `prefix_sum_i = prefix_sum_current - k`. Second, you spent significant time on Python syntax (looping, dictionary access, `defaultdict`) rather than algorithmic thinking, which means Python isn't yet a fluent medium for you.
 
 **Improvement guide:** Since the solution is already optimal, focus on *ownership* rather than optimization. Next time, attempt this problem with no references — force yourself to (1) derive the `prefix_sum - k` identity aloud before writing code, and (2) write it in both C++ and Python to reduce syntax friction. If you can articulate the core invariant in one sentence — *"for every ending index, count how many prior prefix sums equal the current prefix minus k"* — you've internalized it.
+
+---
+
+## 0003.longest-substring-without-repeating-characters | Box 1 | Last attempt: 2026-11-01
+
+You solved this correctly using the sliding window + hashmap approach, achieving good runtime and memory stats. You demonstrated solid problem decomposition—quickly recognizing the monotonic sliding window pattern, leveraging a hashmap for O(1) lookups of last-seen indices, and iterating through multiple failing test cases (MQ, pwwkew, ccbbcc) with debug prints to isolate the logic error where you needed to check `map[s[j]] > i` rather than just `s[j] in map` (which fails when a character was seen *before* the current window). Your debugging process was methodical and eventually led you to the correct fix.
+
+**What went well:** You correctly identified the algorithm upfront, handled edge cases around window boundaries (initializing `i = -1`, removing the `+1` after `i = map[s[j]]`), and caught a subtle bug where stale map entries from *before* the current window were incorrectly triggering a window move. Your willingness to trace execution manually when prints were insufficient showed good debugging instincts. You also avoided using `defaultdict`'s default 0-value as a false positive, though you initially worried about it.
+
+**Areas to improve:** You spent considerable time on off-by-one errors that stem from C++ habits (`j++`, `i = map[sj] + 1` initially) not translating cleanly to Python's exclusive range semantics—practice Python's `range()` and slicing conventions to reduce this friction. Your solution is optimal at O(n) time / O(min(n, alphabet)) space, so no algorithmic changes needed. The `j += 1` at the end of a `for j in range()` loop is a no-op—removing dead code like this will save confusion later. Also, avoid naming a variable `map` as it shadows Python's built-in.
