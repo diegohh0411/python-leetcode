@@ -1,11 +1,13 @@
 problems:
   '3':
-    box_num: 1
-    streak_perfect: 0
-    last_review: '2026-11-01'
+    box_num: 2
+    streak_perfect: 1
+    last_review: '2026-11-02'
     attempts:
     - date: '2026-11-01'
       rating: 4
+    - date: '2026-11-02'
+      rating: 5
   '49':
     box_num: 1
     streak_perfect: 0

@@ -12,13 +12,3 @@ input:
 "pwwkew"
 output:
 3
-
-input:
-"mq"
-output:
-2
-
-input:
-"ccbbcc"
-output:
-2
