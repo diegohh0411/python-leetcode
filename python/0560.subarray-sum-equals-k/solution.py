@@ -1,4 +1,4 @@
-# Created by Diego Hernández Herrera at 2026/11/01 19:16
+# Created by Diego Hernández Herrera at 2026/11/02 18:19
 # leetgo: 1.4.18
 # https://leetcode.com/problems/subarray-sum-equals-k/
 
@@ -10,17 +10,22 @@ from collections import defaultdict
 
 class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
-        answer = 0
-        prefix_sum = 0
-        psfm = defaultdict(int) # PSFM stands for prefix sum frequency map
+        answer: int = 0
+        prefix_sum: int = 0
+        psfm: defaultdict[int, int] = defaultdict(int)
         psfm[0] = 1;
 
-        for x in nums:
-            prefix_sum += x;
-            answer += psfm.get(prefix_sum - k, 0);
+        for n in nums:
+            prefix_sum += n
+
+            if prefix_sum - k in psfm:
+                answer += psfm[prefix_sum - k];
+
             psfm[prefix_sum] = psfm.get(prefix_sum, 0) + 1;
 
         return answer
+
+
 
 # @lc code=end
 

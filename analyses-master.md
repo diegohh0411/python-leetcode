@@ -23,19 +23,66 @@ Problems are sorted into 5 boxes based on self-assessed performance:
 
 ---
 
-## 0049.group-anagrams | Box 1 | Last attempt: 2026-11-02
+## 0054.spiral-matrix | Box 1 | Last attempt: 2026-11-05
 
-## Analysis of Your Group Anagrams Attempt
+## 1. Overview
 
-**Overview:** You had a solid first-attempt Python solution for Group Anagrams. You correctly identified the core strategy — using sorted strings as dictionary keys to group anagrams — and passed all 130 test cases with strong performance (11ms, better than 85%). You noted this was a repeat problem you'd done before in C++, which gave you confidence in the approach.
+You attempted Spiral Matrix in Python (first time, previously solved in C++) but didn't get it fully working after ~30 minutes of debugging. Your final submitted code produces an incorrect result for Example 2 (13 elements instead of 12, with element `6` duplicated). The core algorithmic approach—four boundary pointers (l, r, t, b) shrinking inwards after each traversal—is correct, but the implementation has a boundary-guard bug.
 
-**What You Did Well:** Your intuition for the problem was immediate and correct. Using `defaultdict(list)` with sorted-string keys is the clean, idiomatic Python approach for this problem. You also self-corrected efficiently — catching the indentation error and the missing step of converting `groupings` into the `answer` list. Your performance metrics were excellent.
+## 2. What You Did Well
 
-**Struggles / Areas to Improve:** Your voice notes reveal some unfamiliarity with Python fundamentals: `defaultdict` syntax, how `sorted()` works on strings, string immutability vs. list `append`, and how to iterate over a dictionary's items. You had to Google several of these mid-problem. You also declared `key` outside the loop unnecessarily, and the explicit `if/else` membership check is redundant when using `defaultdict` — `groupings[key].append(item)` handles both cases automatically. Practicing Python's standard library and common idioms (dict iteration, defaultdict shortcuts) will speed up your workflow considerably.
+- You correctly recalled the 4-pointer approach from your prior C++ solution and translated the idea into Python.
+- You were systematic about debugging—adding print statements, tracing loop iterations, and identifying specific issues (boundary direction, inclusive/exclusive ranges, row vs. column confusion).
+- You correctly identified several real bugs during your session: incrementing `r` instead of decrementing it, not using `b-1` in the bottom traversal, and getting row/column order mixed up.
+
+## 3. What You Struggled With
+
+- **Missing guards on inner loops**: After shrinking boundaries, you executed all four `for` loops unconditionally. In Example 2, after processing the top row and right column, the bottom-row traversal re-accesses `matrix[1][1] = 6`, which was already collected—causing a duplicate. You were close: your voice notes even mention wanting `if l < r` guards but you couldn't land on a clean fix before giving up.
+- **Loop direction/orientation**: You repeatedly confused row-first vs. column-first traversal order (mixing up which index is `i` vs. `j`), which cost significant time.
+- **Avoided a simpler debugging strategy**: You tried many individual fixes rather than carefully tracing Example 2 step-by-step on paper to spot exactly which element got duplicated.
+
+## 4. Improvement Guide
+
+**Key algorithm**: Four boundary pointers with conditional guards on each inner traversal. O(m·n) time, O(1) space (excluding output).
+
+**Fix**: Add `if` guards around the inner loops so you never traverse a collapsed boundary:
+
+```python
+def spiralOrder(self, matrix):
+    m, n = len(matrix), len(matrix[0])
+    l, r, t, b = 0, n, 0, m
+    answer = []
+
+    while l < r and t < b:
+        for j in range(l, r):
+            answer.append(matrix[t][j])
+        t += 1
+
+        if t < b:
+            for i in range(t, b):
+                answer.append(matrix[i][r - 1])
+            r -= 1
+
+        if l < r:
+            for j in reversed(range(l, r)):
+                answer.append(matrix[b - 1][j])
+            b -= 1
+
+        if t < b:
+            for i in reversed(range(t, b)):
+                answer.append(matrix[i][l])
+            l += 1
+
+    return answer
+```
+
+**Why this works**: After processing the top row (shrinking `t`), the right column might no longer exist (`t >= b`)—so you must check before traversing it. Same logic applies after shrinking `r` before the bottom row. The `while` condition changes from `or` to `and` because both dimensions must be valid to enter another full cycle.
+
+**Practice tip**: For spatial/boundary problems like this, always trace a non-square matrix (e.g., 3×4) on paper before coding—square matrices mask off-by-one and guard bugs.
 
 ---
 
-## 0560.subarray-sum-equals-k | Box 1 | Last attempt: 2026-11-01
+## 0560.subarray-sum-equals-k | Box 1 | Last attempt: 2026-11-02
 
 **Overview:** After 7 failed attempts (mostly in C++), you finally solved this in Python using the correct prefix sum + hash map approach. You referenced your previous AI analysis to correct known pitfalls (map storing frequencies not indices/answers, initializing `psfm[0] = 1`), which helped you pass efficiently — though you still relied heavily on web lookups for Python syntax rather than solving purely from understanding.
 
@@ -47,7 +94,7 @@ Problems are sorted into 5 boxes based on self-assessed performance:
 
 ---
 
-## 0003.longest-substring-without-repeating-characters | Box 1 | Last attempt: 2026-11-01
+## 0003.longest-substring-without-repeating-characters | Box 2 | Last attempt: 2026-11-02
 
 **Overview:** You made a solid progression across two attempts. Your first attempt involved several bugs (using `answer += length` instead of `max`, off-by-one errors with the left pointer, and a flawed window-membership check requiring extensive print-debugging). Your second attempt was much cleaner—identical algorithm, but only needed one quick debug to catch a for-loop confusion, and it passed with better runtime (186ms, 81%) and memory (92%).
 
@@ -56,3 +103,15 @@ Problems are sorted into 5 boxes based on self-assessed performance:
 **Areas to improve:** In your first attempt, several fundamental bugs went unnoticed until test failures: `answer += window_len` vs `answer = max(answer, window_len)`, the `i = indexes[c] + 1` off-by-one, and checking `j >= i` instead of `indexes[c] > i` for window membership. These suggest you should do a **dry run on paper before coding** rather than relying solely on test cases to catch logic errors. Also, your second attempt had a lingering confusion about Python's `for j in range(...)` loop managing `j` for you—internalize that Python's for-loops don't need manual iteration increments.
 
 **Improvement guide:** Your solution is already optimal (O(n) time, O(min(n,charset)) space), so no algorithmic changes needed. For future practice, focus on **pre-code verification**: trace your logic through one example step-by-step in your head or on paper before submitting. This would have caught most of your first-attempt bugs immediately and saved significant debugging time.
+
+---
+
+## 0049.group-anagrams | Box 1 | Last attempt: 2026-11-02
+
+## Analysis of Your Group Anagrams Attempt
+
+**Overview:** You had a solid first-attempt Python solution for Group Anagrams. You correctly identified the core strategy — using sorted strings as dictionary keys to group anagrams — and passed all 130 test cases with strong performance (11ms, better than 85%). You noted this was a repeat problem you'd done before in C++, which gave you confidence in the approach.
+
+**What You Did Well:** Your intuition for the problem was immediate and correct. Using `defaultdict(list)` with sorted-string keys is the clean, idiomatic Python approach for this problem. You also self-corrected efficiently — catching the indentation error and the missing step of converting `groupings` into the `answer` list. Your performance metrics were excellent.
+
+**Struggles / Areas to Improve:** Your voice notes reveal some unfamiliarity with Python fundamentals: `defaultdict` syntax, how `sorted()` works on strings, string immutability vs. list `append`, and how to iterate over a dictionary's items. You had to Google several of these mid-problem. You also declared `key` outside the loop unnecessarily, and the explicit `if/else` membership check is redundant when using `defaultdict` — `groupings[key].append(item)` handles both cases automatically. Practicing Python's standard library and common idioms (dict iteration, defaultdict shortcuts) will speed up your workflow considerably.
